@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block customcss %}
+<link href="{% static 'signup.css' %}" rel="stylesheet">
+{% endblock customcss %}
+
+{% block content %}
+
+<body class="text-center">
+    <main class="form-signin">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
+            
+            <!-- user_id -->
+            <div class="form-floating">
+                <input type="text" class="form-control" id="user_id" placeholder="user_id" name="user_id" required
+                autofocus>
+                <label for="user_id">ユーザーID</label>
+            </div>
+            <!-- password -->
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" placeholder="password" name="password"
+                required>
+                <label for="password">パスワード</label>
+            </div>
+            <!-- firstName -->
+            <div class="form-floating">
+                <input type="text" class="form-control" id="firstName" placeholder="名" name="firstName">
+                <label for="firstName">名</label>
+            </div>
+            <!-- lastName -->
+            <div class="form-floating">
+                <input type="text" class="form-control" id="lastName" placeholder="姓" name="lastName">
+                <label for="lastName">姓</label>
+            </div>
+            <!-- profile_image -->
+            <div class="form-floating">
+                <input type="file" class="form-control form-control-sm" id="profile_image" name="profile_image" >
+                <label for="profile_image">プロフィール画像</label>
+            </div>
+            <!-- email -->
+            <div class="form-floating">
+                <input type="email" class="form-control" id="email" placeholder="test@example.com" name="email">
+                <label for="email">メールアドレス</label>
+            </div>
+            
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
+            <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+        </form>
+    </main>
+    {{ error }}
+</body>
+{% endblock content %}

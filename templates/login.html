@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<body class="text-center">
+    {{ context  }}
+    <main class="form-signin">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <!-- <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
+            <h1 class="h3 mb-3 fw-normal">Please login</h1>
+            
+            <div class="form-floating">
+                <input type="text" class="form-control" id="floatingInput" placeholder="user_id" name="user_id" required autofocus>
+                <label for="floatingInput">ユーザーID</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password" required>
+                <label for="floatingPassword">パスワード</label>
+            </div>
+            
+            <button class="w-100 btn btn-lg btn-primary" type="submit">login</button>
+            <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+        </form>
+    </main>
+    {{ message }}
+</body>
+{% endblock content %}
