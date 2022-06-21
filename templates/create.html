@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block customcss %}
+{% endblock customcss %}
+
+{% block header %}
+<div class="alert alert-light" role="alert">
+    <h3>Posting App</h3>
+
+    <a href="{% url 'logout' %}" class="btn btn-link">ログアウト</a>
+</div>
+{% endblock header %}
+
+{% block content %}
+<div class="container">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <input type="hidden" name="user_id" value="{{ user.user_id }}">
+
+        <div class="mb-3">
+            <label for="content" class="form-label">内容</label>
+            <textarea class="form-control" id="content" rows="5" name="content" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="article_image" class="form-label">画像</label>
+            <input class="form-control form-control-sm" id="article_image" type="file" name="article_image">
+        </div>
+
+
+        <input type="submit" class="btn btn-primary" value="create">
+    </form>
+</div>
+
+{% endblock content %}
