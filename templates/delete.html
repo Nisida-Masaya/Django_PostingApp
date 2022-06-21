@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block customcss %}
+{% endblock customcss %}
+
+{% block header %}
+<div class="alert alert-light" role="alert">
+    <h3>SNS</h3>
+
+    <a href="{% url 'logout' %}" class="btn btn-link">ログアウト</a>
+</div>
+{% endblock header %}
+
+{% block content %}
+<div class="container">
+    <h3>以下の内容を削除してもいいですか？</h3>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="alert alert-secondary" role="alert">
+            <p>内容：{{ object.content }}</p>
+            <p>投稿者：{{ object.user_id }}</p>  
+            <!-- 画像がないとエラーが出るので条件分岐で回避 -->
+            {% if object.article_image %}   
+                <img src="{{ object.article_image.url }}" width="100" height="100">  
+            {% else %}  
+                
+            {% endif %}
+        </div>
+
+        <input type="submit" class="btn btn-danger" value="削除">
+    </form>
+</div>
+{% endblock content %}

@@ -1,9 +1,8 @@
-from distutils.command.upload import upload
-import email
+from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.core.validators import MinLengthValidator, RegexValidator
-
+from django.utils import timezone
 
 # Create your models here.
 class MyUserManager(BaseUserManager):
@@ -77,4 +76,17 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
-# 投稿記事
+# 投稿記事モデル
+class Article(models.Model):
+    # MyUserモデルから参照しているon_delete=models.CASCADEは削除時の挙動
+    user_id = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    content = models.TextField()
+    article_image = models.ImageField(upload_to ='', null=True, blank=True)
+    create_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+       return self.content
+
+    # 降順
+    class Meta:
+        ordering = ['-create_at']
