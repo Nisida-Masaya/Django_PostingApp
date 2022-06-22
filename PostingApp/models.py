@@ -82,6 +82,8 @@ class Article(models.Model):
     user_id = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     content = models.TextField()
     article_image = models.ImageField(upload_to ='', null=True, blank=True)
+    # related_nameは逆参照する時に指定する
+    like = models.ManyToManyField(MyUser, related_name='related_post', blank=True)
     create_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

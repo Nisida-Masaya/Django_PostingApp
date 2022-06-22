@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Article
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DeleteView
 
 import re
@@ -70,7 +72,7 @@ def logout_function(request):
 def list_function(request):
     object_list = Article.objects.all()
     login_user = request.user
-    return render(request, 'list.html', {'object_list': object_list, 'login_user':login_user})
+    return render(request, 'list.html', {'object_list': object_list, 'login_user': login_user})
 
 # 投稿作成
 
@@ -92,7 +94,7 @@ class ArticleCreate(CreateView):
 def articledetail_function(request, pk):
     object = get_object_or_404(Article, pk=pk)
     login_user = request.user
-    return render(request, 'detail.html', {'object': object, 'login_user':login_user})
+    return render(request, 'detail.html', {'object': object, 'login_user': login_user})
 
 # 投稿記事の削除
 
@@ -102,8 +104,39 @@ class ArticleDelete(DeleteView):
     model = Article
     success_url = reverse_lazy('list')
 
-    def loginuser(self, request):
-        login_user_id = {
-            'user_id' : self.request.user.user_id
-        }
-        return self.render_to_response(login_user_id)
+# いいね機能
+
+
+class LikeBase(View):
+    # いいねのベースクラス、リダイレクト先を以降で継承先で設定
+    def get(self, request, *args, **kwargs):
+        # 記事の取得
+        pk = self.kwargs['pk']
+        related_post = Article.objects.get(pk=pk)
+
+        # いいねテーブル内にすでにユーザーが存在する場合
+        if self.request.user in related_post.like.all(): 
+           # テーブルからユーザーを削除 
+           obj = related_post.like.remove(self.request.user)
+         # いいねテーブル内にすでにユーザーが存在しない場合
+        else:
+           # テーブルにユーザーを追加                           
+           obj = related_post.like.add(self.request.user)  
+        return obj
+
+class LikeHome(LikeBase):
+    # HOMEページでいいねした場合
+    def get(self, request, *args, **kwargs):
+       #LikeBaseでリターンしたobj情報を継承
+       super().get(request, *args, **kwargs)
+       #homeにリダイレクト
+       return redirect('list')
+
+class LikeDetail(LikeBase):
+    # 詳細ページでいいねした場合
+    def get(self, request, *args, **kwargs):
+       #LikeBaseでリターンしたobj情報を継承
+       super().get(request, *args, **kwargs)
+       pk = self.kwargs['pk'] 
+       #detailにリダイレクト
+       return redirect('detail', pk)
