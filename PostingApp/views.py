@@ -140,3 +140,10 @@ class LikeDetail(LikeBase):
        pk = self.kwargs['pk'] 
        #detailにリダイレクト
        return redirect('detail', pk)
+
+# いいねリスト
+
+def likelist_function(request):
+    object_list = Article.objects.all()
+    login_user = request.user
+    return render(request, 'likelist.html', {'object_list': object_list, 'login_user': login_user})
