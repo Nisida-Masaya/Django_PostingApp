@@ -6,18 +6,36 @@
 {% endblock customcss %}
 
 {% block header %}
-<div class="alert alert-light" role="alert">
-    <h3>SNS</h3>
+<header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <a href="{% url 'list' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+      <span class="fs-4">bezibezitter</span>
+    </a>
 
-    <a href="{% url 'logout' %}" class="btn btn-link">ログアウト</a>
-</div>
+    <ul class="nav nav-pills">
+      <li class="nav-item"><a href="#" class="nav-link" aria-current="page">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
+      <li class="nav-item"><a href="{% url 'followlist' %}" class="nav-link">フォローしたユーザーの投稿</a></li>
+      <li class="nav-item"><a href="{% url 'likelist' %}" class="nav-link">いいねリスト</a></li>
+      <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">ログアウト</a></li>
+      <li class="nav-item"><a href="{% url 'account' %}"><img src="{{ login_user.profile_image.url }}" alt="" height="50" width="50"></a></li>
+    </ul>
+  </header>
 {% endblock header %}
 
 {% block content %}
+{% if user.is_authenticated %}
 <div class="container">
     <div class="alert alert-secondary" role="alert">
-        <p>内容：{{ object.content }}</p>
         <p>投稿者：{{ object.user_id }}</p>  
+
+        {% if object.user_id in connection.0.following.all %}
+        <a href="{% url 'follow_detail' object.pk %}" class="btn btn-danger ms-3" tabindex="-1" role="button" aria-disabled="true">フォロー解除</a>
+        {% else %}
+        <a href="{% url 'follow_detail' object.pk %}" class="btn btn-primary ms-3" tabindex="-1" role="button" aria-disabled="true">フォロー</a>
+        {% endif %}
+
+        <p>内容：{{ object.content }}</p>
         <!-- 画像がないとエラーが出るので条件分岐で回避 -->
         {% if object.article_image %}   
             <img src="{{ object.article_image.url }}" width="100" height="100">  
@@ -52,4 +70,7 @@
         {% endif %}
     </div>
 </div>
+{% else %}
+please login
+{% endif %}
 {% endblock content %}

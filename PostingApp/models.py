@@ -92,3 +92,11 @@ class Article(models.Model):
     # 降順
     class Meta:
         ordering = ['-create_at']
+
+# フォローモデル
+class Follow(models.Model):
+    user_id = models.OneToOneField(MyUser, verbose_name='ユーザID' ,on_delete=models.CASCADE)
+    following = models.ManyToManyField(MyUser, verbose_name='フォロー' ,related_name='following', blank=True)
+
+    def __str__(self):
+        return str(self.user_id)

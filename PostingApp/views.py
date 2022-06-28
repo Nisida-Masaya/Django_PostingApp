@@ -4,10 +4,10 @@ from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Article
+from .models import Article, Follow, MyUser
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, DeleteView
+from django.views.generic import CreateView, DeleteView, UpdateView, ListView
 
 import re
 
@@ -66,7 +66,21 @@ def logout_function(request):
     # Redirect to a success page.
     return redirect('login')
 
-
+# プロフィール詳細
+@login_required
+def account_function(request):
+    if request.method == 'GET':
+        login_user = request.user
+        return render(request, 'account.html', {'login_user': login_user})
+    else:
+        user = request.user
+        user.firstName = request.POST['firstName']
+        user.lastName = request.POST['lastName']
+        user.email = request.POST['email']
+        user.profile_image = request.FILES['profile_image']
+        user.introduction = request.POST['introduction']
+        user.save()
+        return redirect('list')
 # 投稿リスト
 @login_required
 def list_function(request):
@@ -75,7 +89,6 @@ def list_function(request):
     return render(request, 'list.html', {'object_list': object_list, 'login_user': login_user})
 
 # 投稿作成
-
 
 class ArticleCreate(CreateView):
     template_name = 'create.html'
@@ -89,7 +102,6 @@ class ArticleCreate(CreateView):
         return super().form_valid(form)
 
 # 投稿記事の詳細
-
 
 def articledetail_function(request, pk):
     object = get_object_or_404(Article, pk=pk)
@@ -105,7 +117,6 @@ class ArticleDelete(DeleteView):
     success_url = reverse_lazy('list')
 
 # いいね機能
-
 
 class LikeBase(View):
     # いいねのベースクラス、リダイレクト先を以降で継承先で設定
@@ -142,8 +153,59 @@ class LikeDetail(LikeBase):
        return redirect('detail', pk)
 
 # いいねリスト
-
+@login_required
 def likelist_function(request):
     object_list = Article.objects.all()
     login_user = request.user
     return render(request, 'likelist.html', {'object_list': object_list, 'login_user': login_user})
+
+# フォロー機能
+class FollowBase(View):
+    # フォローのベースクラス、リダイレクト先を以降で継承先で設定
+    def get(self, request, *args, **kwargs):
+        # ユーザーの取得
+        pk = self.kwargs['pk']
+        target_user = Article.objects.get(pk=pk).user_id
+
+        # ユーザー情報よりコネクション情報を取得、存在しなければ作成
+        my_follow = Follow.objects.get_or_create(user_id=self.request.user)
+
+        #フォローテーブル内にすでにユーザーが存在する場合
+        if target_user in my_follow[0].following.all():
+           #テーブルからユーザーを削除
+           obj = my_follow[0].following.remove(target_user)
+        #フォローテーブル内にすでにユーザーが存在しない場合
+        else:
+           #テーブルにユーザーを追加
+           obj = my_follow[0].following.add(target_user)
+        return obj
+
+class FollowHome(FollowBase):
+    # homeでフォローした時
+    def get(self, request, *arg, **kwargs):
+        super().get(request, *arg, **kwargs)
+        return redirect('list')
+
+class FollowDetail(FollowBase):
+    # detailでフォローした時
+    def get(self, request, *arg, **kwargs):
+        super().get(request, *arg, **kwargs)
+        pk = self.kwargs['pk']
+        return redirect('detail', pk)
+
+class FollowList(ListView):
+    # フォローしたユーザの投稿リスト表示
+    model = Article
+    template_name = 'list.html'
+
+    def get_queryset(self):
+        # フォローリスト内にユーザーが含まれている場合のみクエリセット返す
+        my_follow = Follow.objects.get_or_create(user = self.request.user)
+        all_follow = my_follow[0].following.all()
+        return Article.objects.filter(user__in=all_follow)
+
+    def get_context_data(self, *arg, **kwargs):
+        # コネクションに関するオブジェクト情報をコンテクストに追加
+        context = super().get_context_data(*arg, **kwargs)
+        context['connection'] = Follow.objects.get_or_create(user = self.request.user)
+        return context
