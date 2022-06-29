@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Article, Follow, MyUser
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, DeleteView, UpdateView, ListView
+from django.views.generic import CreateView, DeleteView, UpdateView, ListView, DetailView
 
 import re
 
@@ -67,6 +67,8 @@ def logout_function(request):
     return redirect('login')
 
 # プロフィール詳細
+
+
 @login_required
 def account_function(request):
     if request.method == 'GET':
@@ -82,11 +84,21 @@ def account_function(request):
         user.save()
         return redirect('list')
 # 投稿リスト
-@login_required
-def list_function(request):
-    object_list = Article.objects.all()
-    login_user = request.user
-    return render(request, 'list.html', {'object_list': object_list, 'login_user': login_user})
+
+
+class AllList(ListView):
+    # フォローしたユーザの投稿リスト表示
+    model = Article
+    template_name = 'list.html'
+
+    def get_context_data(self, *arg, **kwargs):
+        # コネクションに関するオブジェクト情報をコンテクストに追加
+        context = super().get_context_data(*arg, **kwargs)
+        context['connection'] = Follow.objects.get_or_create(
+            user_id=self.request.user)
+        print(context['connection'])
+        return context
+
 
 # 投稿作成
 
@@ -103,11 +115,19 @@ class ArticleCreate(CreateView):
 
 # 投稿記事の詳細
 
-def articledetail_function(request, pk):
-    object = get_object_or_404(Article, pk=pk)
-    login_user = request.user
-    return render(request, 'detail.html', {'object': object, 'login_user': login_user})
 
+class ArticleDetail(DetailView):
+    # フォローしたユーザの投稿リスト表示
+    model = Article
+    template_name = 'detail.html'
+
+    def get_context_data(self, *arg, **kwargs):
+        # コネクションに関するオブジェクト情報をコンテクストに追加
+        context = super().get_context_data(*arg, **kwargs)
+        context['connection'] = Follow.objects.get_or_create(
+            user_id=self.request.user)
+        print(context['connection'])
+        return context
 # 投稿記事の削除
 
 
@@ -118,6 +138,7 @@ class ArticleDelete(DeleteView):
 
 # いいね機能
 
+
 class LikeBase(View):
     # いいねのベースクラス、リダイレクト先を以降で継承先で設定
     def get(self, request, *args, **kwargs):
@@ -126,33 +147,37 @@ class LikeBase(View):
         related_post = Article.objects.get(pk=pk)
 
         # いいねテーブル内にすでにユーザーが存在する場合
-        if self.request.user in related_post.like.all(): 
-           # テーブルからユーザーを削除 
-           obj = related_post.like.remove(self.request.user)
-         # いいねテーブル内にすでにユーザーが存在しない場合
+        if self.request.user in related_post.like.all():
+            # テーブルからユーザーを削除
+            obj = related_post.like.remove(self.request.user)
+          # いいねテーブル内にすでにユーザーが存在しない場合
         else:
-           # テーブルにユーザーを追加                           
-           obj = related_post.like.add(self.request.user)  
+            # テーブルにユーザーを追加
+            obj = related_post.like.add(self.request.user)
         return obj
+
 
 class LikeHome(LikeBase):
     # HOMEページでいいねした場合
     def get(self, request, *args, **kwargs):
-       #LikeBaseでリターンしたobj情報を継承
-       super().get(request, *args, **kwargs)
-       #homeにリダイレクト
-       return redirect('list')
+        # LikeBaseでリターンしたobj情報を継承
+        super().get(request, *args, **kwargs)
+        # homeにリダイレクト
+        return redirect('list')
+
 
 class LikeDetail(LikeBase):
     # 詳細ページでいいねした場合
     def get(self, request, *args, **kwargs):
-       #LikeBaseでリターンしたobj情報を継承
-       super().get(request, *args, **kwargs)
-       pk = self.kwargs['pk'] 
-       #detailにリダイレクト
-       return redirect('detail', pk)
+        # LikeBaseでリターンしたobj情報を継承
+        super().get(request, *args, **kwargs)
+        pk = self.kwargs['pk']
+        # detailにリダイレクト
+        return redirect('detail', pk)
 
 # いいねリスト
+
+
 @login_required
 def likelist_function(request):
     object_list = Article.objects.all()
@@ -160,6 +185,8 @@ def likelist_function(request):
     return render(request, 'likelist.html', {'object_list': object_list, 'login_user': login_user})
 
 # フォロー機能
+
+
 class FollowBase(View):
     # フォローのベースクラス、リダイレクト先を以降で継承先で設定
     def get(self, request, *args, **kwargs):
@@ -170,21 +197,23 @@ class FollowBase(View):
         # ユーザー情報よりコネクション情報を取得、存在しなければ作成
         my_follow = Follow.objects.get_or_create(user_id=self.request.user)
 
-        #フォローテーブル内にすでにユーザーが存在する場合
+        # フォローテーブル内にすでにユーザーが存在する場合
         if target_user in my_follow[0].following.all():
-           #テーブルからユーザーを削除
-           obj = my_follow[0].following.remove(target_user)
-        #フォローテーブル内にすでにユーザーが存在しない場合
+            # テーブルからユーザーを削除
+            obj = my_follow[0].following.remove(target_user)
+        # フォローテーブル内にすでにユーザーが存在しない場合
         else:
-           #テーブルにユーザーを追加
-           obj = my_follow[0].following.add(target_user)
+            # テーブルにユーザーを追加
+            obj = my_follow[0].following.add(target_user)
         return obj
+
 
 class FollowHome(FollowBase):
     # homeでフォローした時
     def get(self, request, *arg, **kwargs):
         super().get(request, *arg, **kwargs)
         return redirect('list')
+
 
 class FollowDetail(FollowBase):
     # detailでフォローした時
@@ -193,6 +222,7 @@ class FollowDetail(FollowBase):
         pk = self.kwargs['pk']
         return redirect('detail', pk)
 
+
 class FollowList(ListView):
     # フォローしたユーザの投稿リスト表示
     model = Article
@@ -200,12 +230,14 @@ class FollowList(ListView):
 
     def get_queryset(self):
         # フォローリスト内にユーザーが含まれている場合のみクエリセット返す
-        my_follow = Follow.objects.get_or_create(user = self.request.user)
+        my_follow = Follow.objects.get_or_create(user_id=self.request.user)
         all_follow = my_follow[0].following.all()
-        return Article.objects.filter(user__in=all_follow)
+        return Article.objects.filter(user_id__in=all_follow)
 
     def get_context_data(self, *arg, **kwargs):
         # コネクションに関するオブジェクト情報をコンテクストに追加
         context = super().get_context_data(*arg, **kwargs)
-        context['connection'] = Follow.objects.get_or_create(user = self.request.user)
+        context['connection'] = Follow.objects.get_or_create(
+            user_id=self.request.user)
+        print(context['connection'])
         return context
