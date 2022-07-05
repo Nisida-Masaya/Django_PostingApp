@@ -17,11 +17,12 @@
   <ul class="nav nav-pills">
     <li class="nav-item"><a href="#" class="nav-link" aria-current="page">Home</a></li>
     <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
-    <li class="nav-item"><a href="#" class="nav-link">Pricing</a></li>
-    <li class="nav-item"><a href="{% url 'likelist' %}" class="btn btn-link">いいねリスト</a></li>
+    <li class="nav-item"><a href="{% url 'followlist' %}" class="nav-link">フォローしたユーザーの投稿</a></li>
+    <li class="nav-item"><a href="{% url 'likelist' %}" class="nav-link">いいねリスト</a></li>
     <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">ログアウト</a></li>
-    <li class="nav-item"><a href=""><img src="{{ login_user.profile_image.url }}" alt="" height="50"
-          width="50"></a></li>
+    <li class="nav-item"><a href="{% url 'account' request.user %}"><img src="{{ request.user.profile_image.url }}"
+          alt="" height="50" width="50"></a></li>
+
   </ul>
 </header>
 {% endblock header %}
@@ -29,44 +30,19 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
+  <img src="{{User.profile_image.url}}" width="50" height="50" alt="">
+  {{User.user_id}}
+  {{User.firstName}}
+  {{User.lastName}}
+  {{User.emailName}}
+  {{User.introduction}}
 
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <h1 class="h3 mb-3 fw-normal">プロフィール編集</h1>
+  <!-- 自分のアカウントだけ編集ボタンを出す -->
+  {% if User.user_id == request.user.user_id %}
+  <a href="{% url 'accountupdate' %}">編集</a>
+  {% endif %}
 
-    <!-- user_id -->
-    <div class="form-floating">
-      <p>user_idは変更できません</p>
-    </div>
-    <!-- firstName -->
-    <div class="form-floating">
-      <input type="text" class="form-control" id="firstName" placeholder="名" name="firstName" value={{request.user.firstName}}>
-      <label for="firstName">名</label>
-    </div>
-    <!-- lastName -->
-    <div class="form-floating">
-      <input type="text" class="form-control" id="lastName" placeholder="姓" name="lastName"value={{request.user.lastName}}>
-      <label for="lastName">姓</label>
-    </div>
-    <!-- profile_image -->
-    <div class="form-floating">
-      <input type="file" class="form-control form-control-sm" id="profile_image" name="profile_image" required>
-      <label for="profile_image">プロフィール画像</label>
-    </div>
-    <!-- email -->
-    <div class="form-floating">
-      <input type="email" class="form-control" id="email" placeholder="test@example.com" name="email" value={{request.user.email}}>
-      <label for="email">メールアドレス</label>
-    </div>
-    <!--  -->
-    <div class="form-floating">
-      <textarea class="form-control" id="content" rows="5" name="introduction">{{ request.user.introduction }}</textarea>
-      <label for="content" class="form-label">内容</label>
-    </div>
-
-    <button class="w-100 btn btn-lg btn-primary" type="submit">更新</button>
-
-  </form>
+  
 </div>
 {% else %}
 please login

@@ -70,10 +70,17 @@ def logout_function(request):
 
 
 @login_required
-def account_function(request):
+def account_function(request, user_id):
+    pro_info = {
+        'User': MyUser.objects.get(user_id=user_id)
+    }
+    return render(request, 'account.html', pro_info)
+
+#プロフィール編集
+def accountUpdate_function(request):
     if request.method == 'GET':
         login_user = request.user
-        return render(request, 'account.html', {'login_user': login_user})
+        return render(request, 'accountupdate.html', {'login_user': login_user})
     else:
         user = request.user
         user.firstName = request.POST['firstName']
@@ -83,6 +90,8 @@ def account_function(request):
         user.introduction = request.POST['introduction']
         user.save()
         return redirect('list')
+ 
+ 
 # 投稿リスト
 
 
