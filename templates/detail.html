@@ -43,7 +43,7 @@
         {% else %}  
             
         {% endif %}
-        {% if object.user_id == login_user %}
+        {% if object.user_id == request.user %}
         <p><a href="{% url 'delete' object.pk %}" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true">削除</a></p>
         {% endif %}
         {% if login_user in object.like.all %}

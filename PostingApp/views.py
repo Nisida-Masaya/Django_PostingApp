@@ -186,7 +186,6 @@ class LikeDetail(LikeBase):
 
 # いいねリスト
 
-
 @login_required
 def likelist_function(request):
     object_list = Article.objects.all()

@@ -1,0 +1,108 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+#header{
+    position: fixed;
+    width: 100%;
+    background-color: rgb(224, 222, 222);
+    z-index: 999;
+}
+.container{
+    padding-top: 90px;
+
+}
+
+.postings_list {
+    display: grid;
+    grid-template-rows: 130px;
+    grid-template-columns: 1140px;
+    flex-wrap: wrap;
+    list-style: none;
+}
+
+.postings_list:hover {
+    text-decoration: none;
+}
+
+.posting_link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0%;
+    right: 0%;
+}
+
+.posting_link:hover {
+    text-decoration: none;
+}
+
+.posting_element {
+    border: 0.5px solid #ccc;
+    border-radius: 5px;
+    width: 95%;
+    padding: 10px;
+}
+
+.posting_element:hover {
+    text-decoration: none;
+}
+
+.create_user {
+    color: black;
+    text-decoration: none;
+    display: block;
+    position: absolute;
+}
+
+.create_user:hover {
+    color: #ccc;
+}
+#content{
+    position: relative;
+    top: 20px;
+    padding: 10px;
+}
+
+.btn_form{
+    display: flex;
+}
+
+/* フォローボタン */
+#follow_btn {
+    z-index: 1;
+    margin-right: 5px;
+}
+
+/* deleteボタン */
+#delete_btn {
+    z-index: 1;
+    margin-right: 5px;
+}
+
+/* likeボタン */
+.like_btn {
+    z-index: 1;
+    margin-top: 5px;
+}
+#like_count{
+    margin-top: 5px;
+    margin-left: 5px;
+}
+.bi-heart{
+    color: red;
+}
+.bi-heart-fill{
+    color: red;
+}
+
+/* createボタン */
+#create_button {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding-right: 50px;
+    padding-bottom: 30px;
+
+}
