@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'PostingApp.apps.PostingappConfig'
+    'PostingApp.apps.PostingappConfig',
+    'sass_processor'
 ]
 
 MIDDLEWARE = [
@@ -124,6 +125,11 @@ STATIC_URL = 'sta/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [str(BASE_DIR / 'static')]
+SASS_PROCESSOR_ROOT = [str(BASE_DIR / 'static')]
+SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^.+\.(sass|scss)$'
+SASS_PRECISION = 8
+SASS_OUTPUT_STYLE = 'compressed'
+SASS_TEMPLATE_EXTS = ['.html', '.haml']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

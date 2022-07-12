@@ -7,43 +7,47 @@
 
 {% block header %}
 <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-    <a href="{% url 'list' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+  <a href="{% url 'list' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+      <svg class="bi me-2" width="40" height="32">
+          <use xlink:href="#bootstrap" />
+      </svg>
       <span class="fs-4">bezibezitter</span>
-    </a>
+  </a>
 
-    <ul class="nav nav-pills">
+  <ul class="nav nav-pills">
       <li class="nav-item"><a href="#" class="nav-link" aria-current="page">Home</a></li>
       <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
       <li class="nav-item"><a href="{% url 'followlist' %}" class="nav-link">フォローしたユーザーの投稿</a></li>
       <li class="nav-item"><a href="{% url 'likelist' %}" class="nav-link">いいねリスト</a></li>
       <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">ログアウト</a></li>
-      <li class="nav-item"><a href="{% url 'account' %}"><img src="{{ login_user.profile_image.url }}" alt="" height="50" width="50"></a></li>
-    </ul>
-  </header>
+      <li class="nav-item"><a href="{% url 'account' request.user %}"><img src="{{ request.user.profile_image.url }}"
+                  alt="" height="50" width="50"></a></li>
+
+  </ul>
+</header>
 {% endblock header %}
 
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
 
-        <input type="hidden" name="user_id" value="{{ user.user_id }}">
-
-        <div class="mb-3">
-            <label for="content" class="form-label">内容</label>
-            <textarea class="form-control" id="content" rows="5" name="content" required></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="article_image" class="form-label">画像</label>
-            <input class="form-control form-control-sm" id="article_image" type="file" name="article_image">
-        </div>
-
-
-        <input type="submit" class="btn btn-primary" value="create">
-    </form>
+    
+    <div class="mb-3">
+      <label for="content" class="form-label">内容</label>
+      <textarea class="form-control" id="content" rows="5" name="content" required></textarea>
+    </div>
+    
+    <div class="mb-3">
+      <label for="article_image" class="form-label">画像</label>
+      <input class="form-control form-control-sm" id="article_image" type="file" name="article_image">
+    </div>
+    
+    
+    <input type="hidden" name="user_id" value="{{ user.user_id }}">
+    <input type="submit" class="btn btn-primary" value="create">
+  </form>
 </div>
 {% else %}
 please login
