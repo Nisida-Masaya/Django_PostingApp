@@ -14,12 +14,11 @@
 }
 
 .postings_list {
-    /* display: grid;
-    grid-template-rows: 126px;
-    grid-template-columns: 1200px;
-    flex-wrap: wrap; */
+    display: grid;
+    grid-template-rows: 130px;
+    grid-template-columns: 1140px;
+    flex-wrap: wrap;
     list-style: none;
-    z-index: 1;
 }
 
 .postings_list:hover {
@@ -44,12 +43,10 @@
     border-radius: 5px;
     width: 95%;
     padding: 10px;
-    margin-bottom: 10px;
 }
 
 .posting_element:hover {
     text-decoration: none;
-    background-color: #ccc;
 }
 
 .create_user {
@@ -60,7 +57,7 @@
 }
 
 .create_user:hover {
-    color: rgb(112, 110, 110);
+    color: #ccc;
 }
 #content{
     position: relative;
@@ -98,14 +95,4 @@
 }
 .bi-heart-fill{
     color: red;
-}
-
-/* createボタン */
-#create_button {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    padding-right: 50px;
-    padding-bottom: 30px;
-
 }
