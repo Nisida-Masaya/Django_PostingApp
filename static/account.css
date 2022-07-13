@@ -10,6 +10,11 @@
     z-index: 999;
 }
 
+.icon{
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
 .container{
     padding-top: 120px;
     display: flex;

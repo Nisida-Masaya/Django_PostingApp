@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block customcss %}
+<link href="{% static 'delete.css' %}" rel="stylesheet">
 {% endblock customcss %}
 
 {% block header %}
@@ -20,7 +21,7 @@
         <li class="nav-item"><a href="{% url 'likelist' %}" class="nav-link">いいねリスト</a></li>
         <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">ログアウト</a></li>
         <li class="nav-item"><a href="{% url 'account' request.user %}"><img src="{{ request.user.profile_image.url }}"
-                    alt="" height="50" width="50"></a></li>
+                    alt="" height="50" width="50" class="icon"></a></li>
 
     </ul>
 </header>
