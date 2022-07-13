@@ -3,24 +3,25 @@
 {% load static %}
 
 {% block customcss %}
+<link href="{% static 'account.css' %}" rel="stylesheet">
 {% endblock customcss %}
 
 {% block header %}
 <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom" id="header">
   <a href="{% url 'list' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-      <svg class="bi me-2" width="40" height="32">
-          <use xlink:href="#bootstrap" />
-      </svg>
-      <span class="fs-4">bezibezitter</span>
+    <svg class="bi me-2" width="40" height="32">
+      <use xlink:href="#bootstrap" />
+    </svg>
+    <span class="fs-4">bezibezitter</span>
   </a>
 
   <ul class="nav nav-pills">
-      <li class="nav-item"><a href="{% url 'list' %}" class="nav-link" aria-current="page">ホーム</a></li>
-      <li class="nav-item"><a href="{% url 'followlist' %}" class="nav-link">フォローしたユーザーの投稿</a></li>
-      <li class="nav-item"><a href="{% url 'likelist' %}" class="nav-link">いいねリスト</a></li>
-      <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">ログアウト</a></li>
-      <li class="nav-item"><a href="{% url 'account' request.user %}"><img src="{{ request.user.profile_image.url }}"
-                  alt="" height="50" width="50"></a></li>
+    <li class="nav-item"><a href="{% url 'list' %}" class="nav-link" aria-current="page">ホーム</a></li>
+    <li class="nav-item"><a href="{% url 'followlist' %}" class="nav-link">フォローしたユーザーの投稿</a></li>
+    <li class="nav-item"><a href="{% url 'likelist' %}" class="nav-link">いいねリスト</a></li>
+    <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">ログアウト</a></li>
+    <li class="nav-item"><a href="{% url 'account' request.user %}"><img src="{{ request.user.profile_image.url }}"
+          alt="" height="50" width="50"></a></li>
 
   </ul>
 </header>
@@ -29,19 +30,52 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
-  <img src="{{User.profile_image.url}}" width="50" height="50" alt="">
-  {{User.user_id}}
-  {{User.firstName}}
-  {{User.lastName}}
-  {{User.emailName}}
-  {{User.introduction}}
+  <img src="{{User.profile_image.url}}" class="profile_image" alt="">
+  <div class="user_info">
+    <label>ユーザーID</label>
+    <p class="user_id">{{User.user_id}}</p>
+  
+    <label>名</label>
+    {% if User.lastName == null %}
+    <p class="">情報がありません</p>
+    {% else %}
+    <p class="lastName">{{User.lastName}}</p>
+    {% endif %}
+  
+    <label>姓</label>
+    {% if User.firstName == null %}
+    <p class="">情報がありません</p>
+    {% else %}
+    <p class="firstName">{{User.firstName}}</p>
+    {% endif %}
+  
+    <label>アドレス</label>
+    {% if User.email == null %}
+    <p class="">情報がありません</p>
+    {% else %}
+    <p class="email">{{User.email}}</p>
+    {% endif %}
+  
+    <label>自己紹介</label>
+    {% if User.introduction == null %}
+    <p class="">情報がありません</p>
+    {% else %}
+    <p class="introduction">{{User.introduction}}</p>
+    {% endif %}
+  </div>
 
   <!-- 自分のアカウントだけ編集ボタンを出す -->
   {% if User.user_id == request.user.user_id %}
-  <a href="{% url 'accountupdate' %}">編集</a>
+  <div>
+    <a href="{% url 'accountupdate' %}" class="edit_link">編集</a>
+  </div>
   {% endif %}
 
-  
+  <div>
+    <input type="button" class="back_btn" value="←" onClick="javascript:history.go(-1);">
+  </div>
+
+
 </div>
 {% else %}
 please login
