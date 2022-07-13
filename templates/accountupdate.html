@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block customcss %}
+<link href="{% static 'accountupdate.css' %}" rel="stylesheet">
 {% endblock customcss %}
 
 {% block header %}
@@ -29,13 +30,15 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
+    <input type="button" class="btn btn-secondary" id="back_btn" value="←" onClick="javascript:history.go(-1);">
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <h1 class="h3 mb-3 fw-normal">プロフィール編集</h1>
 
+        
         <!-- user_id -->
         <div class="form-floating">
-            <p>user_idは変更できません</p>
+            <p class="instructions">user_idは変更できません</p>
         </div>
         <!-- firstName -->
         <div class="form-floating">
