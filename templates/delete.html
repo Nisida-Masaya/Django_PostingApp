@@ -6,11 +6,24 @@
 {% endblock customcss %}
 
 {% block header %}
-<div class="alert alert-light" role="alert">
-    <h3>SNS</h3>
+<header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom" id="header">
+    <a href="{% url 'list' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32">
+            <use xlink:href="#bootstrap" />
+        </svg>
+        <span class="fs-4">bezibezitter</span>
+    </a>
 
-    <a href="{% url 'logout' %}" class="btn btn-link">ログアウト</a>
-</div>
+    <ul class="nav nav-pills">
+        <li class="nav-item"><a href="{% url 'list' %}" class="nav-link" aria-current="page">ホーム</a></li>
+        <li class="nav-item"><a href="{% url 'followlist' %}" class="nav-link">フォローしたユーザーの投稿</a></li>
+        <li class="nav-item"><a href="{% url 'likelist' %}" class="nav-link">いいねリスト</a></li>
+        <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">ログアウト</a></li>
+        <li class="nav-item"><a href="{% url 'account' request.user %}"><img src="{{ request.user.profile_image.url }}"
+                    alt="" height="50" width="50"></a></li>
+
+    </ul>
+</header>
 {% endblock header %}
 
 {% block content %}
@@ -25,11 +38,12 @@
             {% if object.article_image %}   
                 <img src="{{ object.article_image.url }}" width="100" height="100">  
             {% else %}  
-                
+                <p></p>
             {% endif %}
         </div>
 
         <input type="submit" class="btn btn-danger" value="削除">
+        <input type="button" class="btn btn-secondary" value="戻る" onClick="javascript:history.go(-1);">
     </form>
 </div>
 {% endblock content %}

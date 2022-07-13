@@ -3,73 +3,87 @@
 {% load static %}
 
 {% block customcss %}
+<link href="{% static 'detail.css' %}" rel="stylesheet">
 {% endblock customcss %}
 
 {% block header %}
-<header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+<header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom" id="header">
     <a href="{% url 'list' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
-      <span class="fs-4">bezibezitter</span>
+        <svg class="bi me-2" width="40" height="32">
+            <use xlink:href="#bootstrap" />
+        </svg>
+        <span class="fs-4">bezibezitter</span>
     </a>
 
     <ul class="nav nav-pills">
-      <li class="nav-item"><a href="#" class="nav-link" aria-current="page">Home</a></li>
-      <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
-      <li class="nav-item"><a href="{% url 'followlist' %}" class="nav-link">フォローしたユーザーの投稿</a></li>
-      <li class="nav-item"><a href="{% url 'likelist' %}" class="nav-link">いいねリスト</a></li>
-      <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">ログアウト</a></li>
-      <li class="nav-item"><a href="{% url 'account' request.user %}"><img src="{{ request.user.profile_image.url }}" alt="" height="50" width="50"></a></li>
+        <li class="nav-item"><a href="{% url 'list' %}" class="nav-link" aria-current="page">ホーム</a></li>
+        <li class="nav-item"><a href="{% url 'followlist' %}" class="nav-link">フォローしたユーザーの投稿</a></li>
+        <li class="nav-item"><a href="{% url 'likelist' %}" class="nav-link">いいねリスト</a></li>
+        <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">ログアウト</a></li>
+        <li class="nav-item"><a href="{% url 'account' request.user %}"><img src="{{ request.user.profile_image.url }}"
+                    alt="" height="50" width="50"></a></li>
 
     </ul>
-  </header>
+</header>
 {% endblock header %}
 
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
-    <div class="alert alert-secondary" role="alert">
-        <p>投稿者：{{ object.user_id }}</p>  
-
-        {% if object.user_id in connection.0.following.all %}
-        <a href="{% url 'follow_detail' object.pk %}" class="btn btn-danger ms-3" tabindex="-1" role="button" aria-disabled="true">フォロー解除</a>
-        {% else %}
-        <a href="{% url 'follow_detail' object.pk %}" class="btn btn-primary ms-3" tabindex="-1" role="button" aria-disabled="true">フォロー</a>
-        {% endif %}
-
+    <div class="element">
+        <p>投稿者：{{ object.user_id }}</p>
         <p>内容：{{ object.content }}</p>
+
         <!-- 画像がないとエラーが出るので条件分岐で回避 -->
-        {% if object.article_image %}   
-            <img src="{{ object.article_image.url }}" width="100" height="100">  
-        {% else %}  
-            
-        {% endif %}
-        {% if object.user_id == request.user %}
-        <p><a href="{% url 'delete' object.pk %}" class="btn btn-danger" tabindex="-1" role="button" aria-disabled="true">削除</a></p>
-        {% endif %}
-        {% if login_user in object.like.all %}
-        <p>
-            <a href="{% url 'like_detail' object.pk %}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-heart-fill" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
-                </svg>
-            </a>
-            {{ object.like.count }}
-        </p>
+        {% if object.article_image %}
+        <img src="{{ object.article_image.url }}" width="100" height="100">
         {% else %}
-        <p>
-            <a href="{% url 'like_detail' object.pk %}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-heart" viewBox="0 0 16 16">
-                    <path
-                        d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
-                </svg>
-            </a>
-            {{ object.like.count }}
-        </p>
+        <p></p>
         {% endif %}
+
+        <div class="btn_form">
+            <!-- フォローボタン -->
+            {% if object.user_id in connection.0.following.all %}
+            <a href="{% url 'follow_detail' object.pk %}" class="btn btn-danger ms-3" tabindex="-1" role="button"
+                aria-disabled="true" id="follow_btn">フォロー解除</a>
+            {% else %}
+            <a href="{% url 'follow_detail' object.pk %}" class="btn btn-primary ms-3" tabindex="-1" role="button"
+                aria-disabled="true" id="follow_btn">フォロー</a>
+            {% endif %}
+
+            <!-- 削除ボタン -->
+            {% if object.user_id == request.user %}
+            <p><a href="{% url 'delete' object.pk %}" class="btn btn-danger" tabindex="-1" role="button"
+                    aria-disabled="true" id="delete_btn">削除</a></p>
+            {% endif %}
+
+            <!-- いいねボタン -->
+            {% if login_user in object.like.all %}
+            <p>
+                <a href="{% url 'like_detail' object.pk %}" class="like_btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-heart-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+                    </svg>
+                </a>
+                {{ object.like.count }}
+            </p>
+            {% else %}
+            <p>
+                <a href="{% url 'like_detail' object.pk %}" class="like_btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-heart" viewBox="0 0 16 16">
+                        <path
+                            d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                    </svg>
+                </a>
+                {{ object.like.count }}
+            </p>
+            {% endif %}
+        </div>
     </div>
+    <input type="button" class="btn btn-secondary" id="back_btn" value="戻る" onClick="javascript:history.go(-1);">
 </div>
 {% else %}
 please login

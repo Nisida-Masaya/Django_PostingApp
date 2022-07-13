@@ -29,15 +29,14 @@
 
 {% block content %}
 <div class="container">
-    {% for item in object_list %}
     <ul class="postings_list">
+        {% for item in object_list %}
         <a href="{% url 'detail' item.pk %}" class="posting_link">
             <li class="posting_element">
-
                 <a href="{% url 'account' item.user_id%}" class="create_user">投稿者：{{ item.user_id }}</a>
-
                 <p id="content">{{ item.content }}</p>
                 <div class="btn_form">
+                    <!-- フォローボタン -->
                     {% if item.user_id in connection.0.following.all %}
                     <a href="{% url 'follow_home' item.pk %}" class="btn btn-danger ms-3" tabindex="-1" role="button"
                         aria-disabled="true" id="follow_btn">フォロー解除</a>
@@ -46,22 +45,28 @@
                         aria-disabled="true" id="follow_btn">フォロー</a>
                     {% endif %}
 
+                    <!-- 削除ボタン -->
                     {% if item.user_id == request.user %}
                     <a href="{% url 'delete' item.pk %}" class="btn btn-danger" tabindex="-1" role="button"
                         aria-disabled="true" id="delete_btn">削除</a>
                     {% endif %}
 
+                    <!-- likeボタン -->
                     {% if login_user in item.like.all %}
                     <a href="{% url 'like_home' item.pk %}" class="like_btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-heart-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
                         </svg>
                     </a>
                     <p id="like_count">{{ item.like.count }}</p>
                     {% else %}
                     <a href="{% url 'like_home' item.pk %}" class="like_btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-heart" viewBox="0 0 16 16">
+                            <path
+                                d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
                         </svg>
                     </a>
                     <p id="like_count">{{ item.like.count }}</p>
@@ -69,8 +74,8 @@
                 </div>
             </li>
         </a>
+        {% endfor %}
     </ul>
-    {% endfor %}
 </div>
 
 <!-- create -->
