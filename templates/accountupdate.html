@@ -54,7 +54,7 @@
         </div>
         <!-- profile_image -->
         <div class="form-floating">
-            <input type="file" class="form-control form-control-sm" id="profile_image" name="profile_image" required>
+            <input type="file" src="{{request.user.profile_image.url}}" value="" class="form-control form-control-sm" id="profile_image" name="profile_image">
             <label for="profile_image">プロフィール画像</label>
         </div>
         <!-- email -->

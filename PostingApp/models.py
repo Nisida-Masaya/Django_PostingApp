@@ -1,3 +1,4 @@
+from email.policy import default
 from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
@@ -21,6 +22,7 @@ class MyUserManager(BaseUserManager):
             password=password,
             email=email,
             profile_image=profile_image
+            
         )
 
         user.set_password(password)
@@ -45,7 +47,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     user_id = models.CharField(verbose_name='ユーザID', primary_key=True, max_length=20)
     firstName = models.CharField(verbose_name='名', max_length=15, blank=True, null=True)
     lastName = models.CharField(verbose_name='姓', max_length=15, blank=True, null=True)
-    profile_image = models.ImageField(verbose_name='プロフィール画像' , upload_to ='', null=True, blank=True)
+    profile_image = models.ImageField(verbose_name='プロフィール画像' , upload_to ='', blank=True ,null=True, default=None)
     email = models.EmailField(verbose_name='メールアドレス', max_length=50, unique=True, blank=True, null=True)
     introduction = models.TextField(verbose_name='自己紹介', max_length=300, blank=True, null=True)
 

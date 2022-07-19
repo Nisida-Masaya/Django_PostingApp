@@ -18,5 +18,4 @@ urlpatterns = [
     path('followlist/', FollowList.as_view(), name='followlist'),
     path('account/<str:user_id>', account_function, name='account'),
     path('accountupdate/', accountUpdate_function, name='accountupdate')
-
 ]
