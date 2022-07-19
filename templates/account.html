@@ -30,7 +30,11 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
+  {% if User.profile_image == null %}
+  <img src="{{ 'media/no_image.jpg' }}" alt="">
+  {% else %}
   <img src="{{User.profile_image.url}}" class="profile_image" alt="">
+  {% endif %}
   <div class="user_info">
     <label>ユーザーID</label>
     <p class="user_id">{{User.user_id}}</p>

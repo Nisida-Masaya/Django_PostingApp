@@ -4,11 +4,12 @@ from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from .models import Article, Follow, MyUser
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DeleteView, UpdateView, ListView, DetailView
-
+from django.contrib import messages
 import re
 
 
@@ -22,8 +23,12 @@ def signup_function(request):
         lastName = request.POST['lastName']
         email = request.POST['email']
         password = request.POST['password']
-        profile_image = request.FILES['profile_image']
 
+        # if request.FILES['profile_image'] == 'null':
+        # image_path = 'no_image.jpg'
+        profile_image = request.FILES['no_image.jpg']
+
+        # profile_image = request.FILES['profile_image']
         # バリデーション
         user_idRegex = '^[a-zA-Z0-9_-]{4,10}$'
 
@@ -76,7 +81,9 @@ def account_function(request, user_id):
     }
     return render(request, 'account.html', pro_info)
 
-#プロフィール編集
+# プロフィール編集
+
+
 def accountUpdate_function(request):
     if request.method == 'GET':
         login_user = request.user
@@ -90,11 +97,11 @@ def accountUpdate_function(request):
         user.introduction = request.POST['introduction']
         user.save()
         return redirect('list')
- 
- 
+
+
 # 投稿リスト
 
-
+@method_decorator(login_required, name='dispatch')
 class AllList(ListView):
     # フォローしたユーザの投稿リスト表示
     model = Article
@@ -110,7 +117,7 @@ class AllList(ListView):
 
 
 # 投稿作成
-
+@method_decorator(login_required, name='dispatch')
 class ArticleCreate(CreateView):
     template_name = 'create.html'
     model = Article
@@ -125,6 +132,7 @@ class ArticleCreate(CreateView):
 # 投稿記事の詳細
 
 
+@method_decorator(login_required, name='dispatch')
 class ArticleDetail(DetailView):
     # フォローしたユーザの投稿リスト表示
     model = Article
@@ -140,6 +148,7 @@ class ArticleDetail(DetailView):
 # 投稿記事の削除
 
 
+@method_decorator(login_required, name='dispatch')
 class ArticleDelete(DeleteView):
     template_name = 'delete.html'
     model = Article
@@ -186,6 +195,7 @@ class LikeDetail(LikeBase):
 
 # いいねリスト
 
+
 @login_required
 def likelist_function(request):
     object_list = Article.objects.all()
@@ -205,15 +215,19 @@ class FollowBase(View):
         # ユーザー情報よりコネクション情報を取得、存在しなければ作成
         my_follow = Follow.objects.get_or_create(user_id=self.request.user)
 
-        # フォローテーブル内にすでにユーザーが存在する場合
-        if target_user in my_follow[0].following.all():
-            # テーブルからユーザーを削除
-            obj = my_follow[0].following.remove(target_user)
-        # フォローテーブル内にすでにユーザーが存在しない場合
+        if str(my_follow[0]) == str(target_user):
+            messages.warning(request, '自分はフォローできません。')
         else:
-            # テーブルにユーザーを追加
-            obj = my_follow[0].following.add(target_user)
-        return obj
+
+            # フォローテーブル内にすでにユーザーが存在する場合
+            if target_user in my_follow[0].following.all():
+                # テーブルからユーザーを削除
+                obj = my_follow[0].following.remove(target_user)
+            # フォローテーブル内にすでにユーザーが存在しない場合
+            else:
+                # テーブルにユーザーを追加
+                obj = my_follow[0].following.add(target_user)
+            return obj
 
 
 class FollowHome(FollowBase):
@@ -230,6 +244,8 @@ class FollowDetail(FollowBase):
         pk = self.kwargs['pk']
         return redirect('detail', pk)
 
+
+# @@method_decorator(login_required, name='dispatch')
 
 class FollowList(ListView):
     # フォローしたユーザの投稿リスト表示
