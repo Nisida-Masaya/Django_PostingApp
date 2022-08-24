@@ -1,4 +1,5 @@
 from django.urls import path
+
 from .views import AllList, ArticleCreate, ArticleDetail, signup_function, login_function, logout_function, ArticleDetail, account_function,ArticleDelete, LikeHome, LikeDetail, likelist_function, FollowHome, FollowDetail, FollowList, accountUpdate_function
 
 
@@ -18,4 +19,5 @@ urlpatterns = [
     path('followlist/', FollowList.as_view(), name='followlist'),
     path('account/<str:user_id>', account_function, name='account'),
     path('accountupdate/', accountUpdate_function, name='accountupdate')
+
 ]

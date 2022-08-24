@@ -1,3 +1,4 @@
+
 from django.urls import reverse_lazy
 from .models import MyUser
 from django.db import IntegrityError
@@ -10,12 +11,14 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DeleteView, UpdateView, ListView, DetailView
 from django.contrib import messages
+
 import re
 
 
 # Create your views here.
 
 # 登録
+
 def signup_function(request):
     if request.method == "POST":
         user_id = request.POST['user_id']
@@ -241,7 +244,7 @@ class FollowDetail(FollowBase):
         return redirect('detail', pk)
 
 
-# @@method_decorator(login_required, name='dispatch')
+# @method_decorator(login_required, name='dispatch')
 
 class FollowList(ListView):
     # フォローしたユーザの投稿リスト表示
@@ -261,3 +264,4 @@ class FollowList(ListView):
             user_id=self.request.user)
         print(context['connection'])
         return context
+

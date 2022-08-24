@@ -9,10 +9,14 @@
 {% block content %}
 
 <body class="text-center">
+
+    {{ error }}
+
     <main class="form-signin">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
+
             
             <!-- user_id -->
             <div class="form-floating">
@@ -54,6 +58,7 @@
         </form>
         {{ error }}
         {{ success }}
+
     </main>
 </body>
 {% endblock content %}
