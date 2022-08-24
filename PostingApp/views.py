@@ -23,18 +23,14 @@ def signup_function(request):
         lastName = request.POST['lastName']
         email = request.POST['email']
         password = request.POST['password']
+        profile_image = request.FILES['profile_image']
 
-        # if request.FILES['profile_image'] == 'null':
-        # image_path = 'no_image.jpg'
-        profile_image = request.FILES['no_image.jpg']
-
-        # profile_image = request.FILES['profile_image']
         # バリデーション
         user_idRegex = '^[a-zA-Z0-9_-]{4,10}$'
 
         try:
             if(not re.match(user_idRegex, user_id)):
-                return render(request, 'signup.html', {'error': 'ユーザーIDは英数字かアンダーバーのみです。'})
+                return render(request, 'signup.html', {'error': 'ユーザーIDは英数字かアンダーバーのみです。(4~10文字)'})
             else:
                 user = MyUser.objects.create_user(
                     user_id, firstName, lastName, email, password, profile_image)
@@ -43,7 +39,7 @@ def signup_function(request):
         except KeyError:
             pass
 
-    return render(request, 'signup.html')
+    return render(request, 'signup.html', {'success' : 'アカウントが作成されました。'})
 
 # ログイン
 
