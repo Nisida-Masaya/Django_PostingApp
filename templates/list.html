@@ -20,8 +20,9 @@
         <li class="nav-item"><a href="{% url 'followlist' %}" class="nav-link">フォローしたユーザーの投稿</a></li>
         <li class="nav-item"><a href="{% url 'likelist' %}" class="nav-link">いいねリスト</a></li>
         <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">ログアウト</a></li>
-        <li class="nav-item"><a href="{% url 'account' request.user %}"><img src="{{ request.user.profile_image.url }}"
-                    alt="" height="50" width="50" class="icon"></a></li>
+        <li class="nav-item"><a href="{% url 'account' request.user %}">
+                <img src="{{ request.user.profile_image.url }}" alt="" height="50" width="50" class="icon">
+            </a></li>
 
     </ul>
 </header>
@@ -34,6 +35,7 @@
         <a href="{% url 'detail' item.pk %}" class="posting_link">
             <li class="posting_element">
                 <a href="{% url 'account' item.user_id%}" class="create_user">投稿者：{{ item.user_id }}</a>
+                <p id="datetime">{{item.create_at}}</p>
                 <p id="content">{{ item.content }}</p>
                 <div class="btn_form">
                     <!-- フォローボタン -->
