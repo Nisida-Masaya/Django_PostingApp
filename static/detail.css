@@ -1,0 +1,66 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#header {
+    position: fixed;
+    width: 100%;
+    background-color: rgb(224, 222, 222);
+    z-index: 999;
+}
+
+.icon{
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.container {
+    padding-top: 90px;
+
+}
+
+.element {
+    border: 0.5px solid #ccc;
+    border-radius: 5px;
+    width: 95%;
+    padding: 10px;
+}
+
+.btn_form {
+    display: flex;
+}
+
+/* フォローボタン */
+#follow_btn {
+    margin-right: 5px;
+}
+
+/* deleteボタン */
+#delete_btn {
+    margin-right: 5px;
+}
+
+/* likeボタン */
+.like_btn {
+    margin-top: 5px;
+    text-decoration: none;
+}
+
+#like_count {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.bi-heart {
+    color: red;
+}
+
+.bi-heart-fill {
+    color: red;
+}
+
+#back_btn {
+    margin-top: 10px;
+    margin-left: auto;
+}

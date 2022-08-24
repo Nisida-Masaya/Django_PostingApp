@@ -1,0 +1,11 @@
+.icon{
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+#back_btn{
+    float: right;
+}
+.form-floating{
+    margin-bottom: 10px;
+}
